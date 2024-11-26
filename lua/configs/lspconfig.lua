@@ -14,15 +14,31 @@ end
 local on_attach = function(client, bufnr)
 	configs.on_attach(client, bufnr)
 
-	vim.keymap.set("n", "<leader>R", vim.diagnostic.goto_next)
+	-- Go to next diagnostic
+	vim.keymap.set("n", "<leader>R", vim.diagnostic.goto_next, { buffer = bufnr })
 
-	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action)
+	-- Show code actions
+	vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, { buffer = bufnr })
+
+	-- Copy the error message at the cursor position
+	vim.keymap.set("n", "<leader>E", function()
+		local diagnostics = vim.diagnostic.get()
+		local cursor_pos = vim.api.nvim_win_get_cursor(0)
+		for _, diagnostic in ipairs(diagnostics) do
+			if diagnostic.lnum == cursor_pos[1] - 1 then
+				-- Copy the diagnostic message to the clipboard
+				vim.fn.setreg("+", diagnostic.message)
+				print("Copied to clipboard: " .. diagnostic.message)
+				break
+			end
+		end
+	end, { buffer = bufnr })
 end
 local on_init = configs.on_init
 local capabilities = configs.capabilities
 
 local lspconfig = require("lspconfig")
-local servers = { "html", "cssls", "clangd", "tsserver", "tailwindcss" }
+local servers = { "html", "cssls", "clangd", "ts_ls", "tailwindcss" }
 
 for _, lsp in ipairs(servers) do
 	lspconfig[lsp].setup({
@@ -39,6 +55,11 @@ lspconfig.zls.setup({
 		"zls",
 		"--enable-debug-log",
 	},
+})
+
+lspconfig.gdscript.setup({
+	on_attach = on_attach,
+	capabilities = capabilities,
 })
 
 lspconfig.rust_analyzer.setup({
@@ -85,3 +106,10 @@ vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 		vim.bo.filetype = "wgsl"
 	end,
 })
+
+-- vim.api.nvim_create_autocmd("BufWritePost", {
+-- 	pattern = "*.dart",
+-- 	callback = function()
+-- 		vim.cmd("FlutterReanalyze")
+-- 	end,
+-- })

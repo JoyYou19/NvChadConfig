@@ -6,6 +6,86 @@ return {
 		end,
 	},
 	{
+		"tpope/vim-dispatch",
+	},
+	-- {
+	-- 	"nvim-flutter/flutter-tools.nvim",
+	-- 	lazy = false,
+	-- 	dependencies = {
+	-- 		"nvim-lua/plenary.nvim",
+	-- 		"stevearc/dressing.nvim", -- optional for vim.ui.select
+	-- 	},
+	-- 	config = function()
+	-- 		local on_attach = function(client, bufnr)
+	-- 			-- Go to next diagnostic
+	-- 			vim.keymap.set("n", "<leader>R", vim.diagnostic.goto_next, { buffer = bufnr })
+	--
+	-- 			-- Show code actions
+	-- 			vim.keymap.set("n", "<leader>a", vim.lsp.buf.code_action, { buffer = bufnr })
+	--
+	-- 			-- Copy the error message at the cursor position
+	-- 			vim.keymap.set("n", "<leader>E", function()
+	-- 				local diagnostics = vim.diagnostic.get()
+	-- 				local cursor_pos = vim.api.nvim_win_get_cursor(0)
+	-- 				for _, diagnostic in ipairs(diagnostics) do
+	-- 					if diagnostic.lnum == cursor_pos[1] - 1 then
+	-- 						-- Copy the diagnostic message to the clipboard
+	-- 						vim.fn.setreg("+", diagnostic.message)
+	-- 						print("Copied to clipboard: " .. diagnostic.message)
+	-- 						break
+	-- 					end
+	-- 				end
+	-- 			end, { buffer = bufnr })
+	-- 		end
+	--
+	-- 		require("flutter-tools").setup({
+	-- 			lsp = {
+	-- 				on_attach = on_attach, -- Attach your custom `on_attach`
+	-- 				color = {
+	-- 					enabled = true,
+	-- 				},
+	-- 			},
+	-- 		})
+	-- 	end,
+	-- },
+
+	"nvim-lua/plenary.nvim",
+
+	{
+		"habamax/vim-godot",
+		event = "VimEnter",
+	},
+
+	{
+		"nvchad/ui",
+		config = function()
+			require("nvchad")
+		end,
+	},
+
+	{
+		"nvchad/base46",
+		lazy = true,
+		build = function()
+			require("base46").load_all_highlights()
+		end,
+	},
+	{
+		"zadirion/Unreal.nvim",
+		lazy = false,
+		-- config = function()
+		-- 	require("tpope/vim-dispatch")
+		-- end,
+	},
+	-- Load custom plugin: code_tracker
+	{
+		dir = "C:/Users/valte/AppData/Local/nvim/lua/code_tracker", -- Specify the directory where your plugin is stored
+		lazy = false,
+		config = function()
+			require("code_tracker").setup() -- Call the setup function from your plugin
+		end,
+	},
+	{
 		"williamboman/mason.nvim",
 		opts = {
 			ensure_installed = {
@@ -102,7 +182,17 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		lazy = false,
 		opts = {
-			ensure_installed = { "c", "cpp", "prisma", "rust", "toml", "wgsl" },
+			ensure_installed = {
+				"gdscript",
+				"godot_resource",
+				"gdshader",
+				"c",
+				"cpp",
+				"prisma",
+				"rust",
+				"toml",
+				"wgsl",
+			},
 			auto_install = true,
 			highlight = {
 				enable = true,

@@ -4,8 +4,14 @@ local M = {
 		javascript = {
 			require("formatter.filetypes.javascript").prettier,
 		},
+		dart = {
+			require("formatter.filetypes.dart").dart,
+		},
 
 		typescript = {
+			require("formatter.filetypes.typescript").prettier,
+		},
+		typescriptreact = { -- Add this to handle .tsx files
 			require("formatter.filetypes.typescript").prettier,
 		},
 
@@ -49,6 +55,14 @@ local M = {
 }
 
 vim.api.nvim_create_autocmd({ "BufWritePost" }, {
-	command = "FormatWriteLock",
+	-- Use conditional autocmd to avoid formatting Rust on save
+	callback = function()
+		if vim.bo.filetype ~= "rust" then
+			vim.cmd("FormatWriteLock")
+		end
+	end,
 })
+
+-- Key mapping to format Rust and other files on demand
+vim.api.nvim_set_keymap("n", "<leader>F", ":lua require('formatter').format()<CR>", { noremap = true, silent = true })
 return M

@@ -12,6 +12,9 @@ end, { desc = "File Format with conform" })
 
 map("i", "jk", "<ESC>", { desc = "Escape insert mode" })
 
+local options = { noremap = true, silent = true }
+map("n", "<leader>H", ":split | terminal<CR>i cargo run --package game<CR>", options)
+
 -- vim.api.nvim_set_keymap("n", "<Tab>", ":bnext<CR>", { noremap = true, silent = true }) -- Next buffer
 -- vim.api.nvim_set_keymap("n", "<S-Tab>", ":bprevious<CR>", { noremap = true, silent = true }) -- Previous buffer
 
